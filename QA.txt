@@ -1,0 +1,37 @@
+Developer to user
+
+Humare kuch questions hain taake sab cheezein clear aur aligned rahen:
+
+* Agar UK daylight saving change ho jaye to existing bookings automatically adjust hongi?
+* Agar student different country se ho to system kis timezone ko priority dega?
+* Calendar Google Calendar ke sath sync hoga ya custom rahega?
+* 1 lesson fixed 1 hour ka hoga ya custom duration bhi hogi? Agar half-hour lesson ho to 0.5 credit deduct hoga?
+* Credits ki expiry date hogi?
+
+* Refund/cancellation par credits wapas milenge?
+* Manual payment verify karne ka exact workflow kya hoga?
+* Currency conversion live hogi ya fixed GBP pricing rahegi?
+
+* Screen recording/download protection chahiye?
+* Student deactivate hote hi access instantly revoke ho jayega?
+* Storage local server par hoga ya cloud (AWS / Cloudinary / Google Drive)?
+
+Scalability for Multi-Teacher System (Phase 2)
+
+* Future mein har teacher ka separate schedule hoga?
+* Kya future mein mobile app ka bhi plan hai?
+* Kya UK GDPR compliance student data ke liye consider karni hai?
+===========================================================================================================
+
+User to Developer
+Yes bookings should adjust 
+Better if it can be adjust to students time zone if not then UK 
+Flexible duration for lesson duration 
+Credits won’t expire they can book hours and then use those hours any time 
+We can link it to Payoneer , a payment link will be generated and sent then can send in their preferred currency 
+Student ki access unke hours booked pe hy even if they are inactive they can login and rebook no such thing as deactivating 
+For storage service and calendar I am okay with what ever is low cost to incorporate at initial stage 
+
+Yes I definitely want to scale it 
+Even now I would like to know the cost difference between Individual service provider and if I hire teachers and allocate them to different students 
+Yes , I would like to have a future app in future
