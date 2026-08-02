@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const LINKS = [
-  { href: "#subjects", label: "Subjects" },
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/subjects", label: "Subjects" },
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 export function MobileNav() {
@@ -31,22 +32,22 @@ export function MobileNav() {
       {open && (
         <div className="absolute left-0 right-0 top-full flex flex-col gap-1 border-t border-deep-blue/10 bg-off-white px-6 py-4 shadow-md">
           {LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
               className="rounded-md px-2 py-2 text-sm font-medium text-deep-blue hover:bg-soft-blue/30"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <a
+          <Link
             href="/register"
             onClick={() => setOpen(false)}
             className="mt-2 rounded-full bg-sage-green px-4 py-2 text-center text-sm font-semibold text-white"
           >
             Book a Free Trial
-          </a>
+          </Link>
         </div>
       )}
     </div>

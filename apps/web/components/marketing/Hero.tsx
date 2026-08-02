@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CurriculumStamp } from "./CurriculumStamp";
 import { StatsStrip } from "./StatsStrip";
 import { PerforatedDivider } from "./PerforatedDivider";
@@ -19,18 +20,18 @@ export function Hero() {
             Expert tutors. Flexible learning. Global access. All in one place.
           </p>
           <div className="flex flex-wrap gap-4">
-            <a
+            <Link
               href="/register"
               className="rounded-full bg-sage-green px-7 py-3.5 font-semibold text-white shadow-sm transition-transform hover:scale-105"
             >
               Book a Free Trial
-            </a>
-            <a
-              href="#subjects"
+            </Link>
+            <Link
+              href="/subjects"
               className="rounded-full border-2 border-deep-blue px-7 py-3.5 font-semibold text-deep-blue transition-colors hover:bg-deep-blue hover:text-off-white"
             >
               Find a Tutor
-            </a>
+            </Link>
           </div>
         </div>
 
