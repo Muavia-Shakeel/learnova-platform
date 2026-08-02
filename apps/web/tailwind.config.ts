@@ -7,7 +7,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "sage-green": "#8FA98B",
+        // Deepened from the brand sheet's lighter swatch — original #8FA98B only hit 2.56:1
+        // contrast for white button text (WCAG AA needs 4.5:1). This tone holds 5.7-6.0:1.
+        "sage-green": "#4A6B4D",
         "deep-blue": "#1F3A5F",
         "sky-blue": "#8FBEDD",
         "soft-blue": "#C7DDEE",

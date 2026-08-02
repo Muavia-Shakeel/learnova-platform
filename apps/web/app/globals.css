@@ -5,3 +5,20 @@
 body {
   @apply bg-off-white text-deep-blue font-body;
 }
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid theme("colors.deep-blue");
+  outline-offset: 2px;
+  border-radius: 2px;
+}

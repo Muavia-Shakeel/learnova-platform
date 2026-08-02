@@ -30,14 +30,14 @@ export function FeaturedTutors() {
       <div className="mx-auto max-w-6xl px-6">
         <FadeIn className="max-w-2xl">
           <h2 className="font-display text-4xl font-bold text-deep-blue">Featured tutors</h2>
-          <p className="mt-3 text-deep-blue/70">Every tutor is degree-verified before their first lesson.</p>
+          <p className="mt-3 text-deep-blue/80">Every tutor is degree-verified before their first lesson.</p>
         </FadeIn>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {TUTORS.map((tutor, i) => (
             <FadeIn key={tutor.name} delay={i * 100}>
               <div className="group relative h-full rounded-2xl border border-deep-blue/10 bg-beige/40 p-6">
-                <span className="absolute -top-3 right-4 -rotate-6 rounded-full border border-dashed border-sage-green bg-off-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sage-green">
+                <span className="absolute -top-3 right-4 -rotate-6 rounded-full border border-dashed border-sage-green bg-off-white px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-sage-green">
                   ✓ Verified
                 </span>
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-sky-blue/40 font-display text-lg font-bold text-deep-blue">
@@ -48,7 +48,7 @@ export function FeaturedTutors() {
                 </div>
                 <h3 className="mt-4 font-semibold text-deep-blue">{tutor.name}</h3>
                 <p className="text-sm text-sage-green">{tutor.subject}</p>
-                <p className="mt-2 text-xs text-deep-blue/70">{tutor.credential}</p>
+                <p className="mt-2 text-xs text-deep-blue/80">{tutor.credential}</p>
               </div>
             </FadeIn>
           ))}

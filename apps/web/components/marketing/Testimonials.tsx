@@ -33,12 +33,12 @@ export function Testimonials() {
           {QUOTES.map((t, i) => (
             <FadeIn key={t.name} delay={i * 120}>
               <div className="relative h-full rounded-2xl bg-off-white p-7 shadow-sm">
-                <span className="absolute right-5 top-5 rotate-12 rounded-full border border-dashed border-deep-blue/30 px-2 py-0.5 text-[10px] uppercase tracking-widest text-deep-blue/40">
+                <span className="absolute right-5 top-5 rotate-12 rounded-full border border-dashed border-deep-blue/30 px-2 py-0.5 text-xs uppercase tracking-widest text-deep-blue/80">
                   Verified
                 </span>
                 <p className="font-display text-lg leading-snug text-deep-blue">&ldquo;{t.quote}&rdquo;</p>
                 <p className="mt-5 text-sm font-semibold text-deep-blue">{t.name}</p>
-                <p className="text-xs text-deep-blue/60">{t.context}</p>
+                <p className="text-xs text-deep-blue/80">{t.context}</p>
               </div>
             </FadeIn>
           ))}

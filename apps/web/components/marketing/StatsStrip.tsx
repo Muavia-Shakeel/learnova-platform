@@ -11,7 +11,7 @@ export function StatsStrip() {
       {STATS.map((stat) => (
         <div key={stat.label}>
           <p className="font-display text-3xl font-bold text-deep-blue sm:text-4xl">{stat.value}</p>
-          <p className="mt-1 text-sm text-deep-blue/70">{stat.label}</p>
+          <p className="mt-1 text-sm text-deep-blue/80">{stat.label}</p>
         </div>
       ))}
     </div>

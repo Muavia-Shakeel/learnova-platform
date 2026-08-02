@@ -54,7 +54,7 @@ export function Faq() {
                     +
                   </span>
                 </button>
-                {isOpen && <p className="pb-5 text-sm text-deep-blue/70">{item.a}</p>}
+                {isOpen && <p className="pb-5 text-sm text-deep-blue/80">{item.a}</p>}
               </div>
             );
           })}

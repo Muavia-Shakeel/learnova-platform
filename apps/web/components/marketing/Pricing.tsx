@@ -13,7 +13,7 @@ export function Pricing() {
       <div className="mx-auto max-w-6xl px-6">
         <FadeIn className="max-w-2xl">
           <h2 className="font-display text-4xl font-bold text-deep-blue">Simple, credit-based pricing</h2>
-          <p className="mt-3 text-deep-blue/70">
+          <p className="mt-3 text-deep-blue/80">
             1 credit = 1 hour of tutoring. Credits never expire, and lessons can run any length from 30
             minutes up.
           </p>
@@ -37,9 +37,9 @@ export function Pricing() {
               <h3 className="font-display text-xl font-bold text-deep-blue">{t.tier}</h3>
               <p className="mt-4 font-display text-4xl font-bold text-deep-blue">
                 £{t.price}
-                <span className="text-base font-normal text-deep-blue/60"> GBP</span>
+                <span className="text-base font-normal text-deep-blue/80"> GBP</span>
               </p>
-              <p className="mt-1 text-sm text-deep-blue/70">{t.credits} lesson credits</p>
+              <p className="mt-1 text-sm text-deep-blue/80">{t.credits} lesson credits</p>
               <a
                 href="/register"
                 className={`mt-6 rounded-full px-5 py-3 text-center text-sm font-semibold transition-transform hover:scale-105 ${

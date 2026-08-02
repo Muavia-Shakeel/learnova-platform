@@ -58,7 +58,7 @@ export function Subjects() {
       <div className="mx-auto max-w-6xl px-6">
         <FadeIn className="max-w-2xl">
           <h2 className="font-display text-4xl font-bold text-deep-blue">What we teach</h2>
-          <p className="mt-3 text-deep-blue/70">
+          <p className="mt-3 text-deep-blue/80">
             Every subject is matched to your child&apos;s country, board, and grade — not a generic syllabus.
           </p>
         </FadeIn>
@@ -68,7 +68,7 @@ export function Subjects() {
             <FadeIn key={group.title} delay={i * 120}>
               <div className="flex h-full flex-col rounded-2xl border border-deep-blue/10 bg-beige/40 p-7">
                 <h3 className="font-display text-xl font-bold text-deep-blue">{group.title}</h3>
-                <p className="mt-1 text-sm text-deep-blue/70">{group.blurb}</p>
+                <p className="mt-1 text-sm text-deep-blue/80">{group.blurb}</p>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {group.items.map((item) => (
                     <li

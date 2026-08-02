@@ -24,7 +24,7 @@ export function HowItWorks() {
       <div className="mx-auto max-w-6xl px-6">
         <FadeIn className="max-w-2xl">
           <h2 className="font-display text-4xl font-bold text-deep-blue">How it works</h2>
-          <p className="mt-3 text-deep-blue/70">Three steps from &quot;curious&quot; to &quot;enrolled.&quot;</p>
+          <p className="mt-3 text-deep-blue/80">Three steps from &quot;curious&quot; to &quot;enrolled.&quot;</p>
         </FadeIn>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -33,7 +33,7 @@ export function HowItWorks() {
               <div className="h-full rounded-2xl bg-off-white p-7">
                 <span className="font-display text-4xl font-bold text-sage-green">{item.step}</span>
                 <h3 className="mt-4 text-lg font-semibold text-deep-blue">{item.title}</h3>
-                <p className="mt-2 text-sm text-deep-blue/70">{item.body}</p>
+                <p className="mt-2 text-sm text-deep-blue/80">{item.body}</p>
               </div>
             </FadeIn>
           ))}

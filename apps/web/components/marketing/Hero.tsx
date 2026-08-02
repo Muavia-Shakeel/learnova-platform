@@ -9,7 +9,7 @@ export function Hero() {
     <section className="bg-beige">
       <div className="mx-auto grid max-w-6xl gap-12 px-6 pb-20 pt-16 sm:pt-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
         <div className="flex flex-col items-start gap-6 text-left">
-          <span className="rounded-full border border-deep-blue/20 bg-off-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-deep-blue/70">
+          <span className="rounded-full border border-deep-blue/20 bg-off-white px-4 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-deep-blue/80">
             A learning passport, stamped in 30+ countries
           </span>
           <h1 className="font-display text-5xl font-bold leading-[1.05] text-deep-blue sm:text-6xl">
