@@ -26,7 +26,7 @@ export function Hero() {
               Book a Free Trial
             </a>
             <a
-              href="#tutors"
+              href="#subjects"
               className="rounded-full border-2 border-deep-blue px-7 py-3.5 font-semibold text-deep-blue transition-colors hover:bg-deep-blue hover:text-off-white"
             >
               Find a Tutor
