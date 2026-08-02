@@ -23,14 +23,14 @@ export function Pricing() {
           {TIERS.map((t) => (
             <div
               key={t.tier}
-              className={`flex flex-col rounded-2xl p-7 ${
+              className={`relative flex h-full flex-col rounded-2xl p-7 ${
                 t.highlight
                   ? "border-2 border-sage-green bg-beige/60"
                   : "border border-deep-blue/10 bg-beige/30"
               }`}
             >
               {t.highlight && (
-                <span className="mb-3 w-fit rounded-full bg-sage-green px-3 py-1 text-xs font-semibold text-white">
+                <span className="absolute -top-3 left-1/2 w-fit -translate-x-1/2 rounded-full bg-sage-green px-3 py-1 text-xs font-semibold text-white">
                   Most popular
                 </span>
               )}
