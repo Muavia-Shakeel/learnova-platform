@@ -17,6 +17,8 @@ import { resourceRouter } from "./routes/resource.routes";
 import { reviewRouter } from "./routes/review.routes";
 import { adminRouter } from "./routes/admin.routes";
 import { tutorRouter } from "./routes/tutor.routes";
+import { studentRouter } from "./routes/student.routes";
+import { subjectRouter } from "./routes/subject.routes";
 
 export const app = express();
 
@@ -50,5 +52,7 @@ app.use("/api/resources", resourceRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/tutors", tutorRouter);
+app.use("/api/students", studentRouter);
+app.use("/api/subjects", subjectRouter);
 
 app.use(errorHandler);
