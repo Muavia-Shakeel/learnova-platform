@@ -50,3 +50,14 @@ adminRouter.get("/dashboard", async (_req, res, next) => {
     next(err);
   }
 });
+
+adminRouter.get("/payments/pending", async (_req, res, next) => {
+  try {
+    const payments = await Payment.find({ status: "pending" })
+      .populate("parentId", "fullName email")
+      .sort({ createdAt: -1 });
+    res.status(200).json({ data: payments });
+  } catch (err) {
+    next(err);
+  }
+});
