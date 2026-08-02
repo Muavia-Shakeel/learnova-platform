@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Nav } from "../../components/marketing/Nav";
 import { HowItWorks } from "../../components/marketing/HowItWorks";
+import { BookingDetails } from "../../components/marketing/BookingDetails";
+import { DashboardPreview } from "../../components/marketing/DashboardPreview";
+import { CalendarLegend } from "../../components/marketing/CalendarLegend";
 import { ContactCta } from "../../components/marketing/ContactCta";
 import { Footer } from "../../components/marketing/Footer";
 
@@ -28,6 +31,9 @@ export default function HowItWorksPage() {
         </div>
       </section>
       <HowItWorks />
+      <BookingDetails />
+      <DashboardPreview />
+      <CalendarLegend />
       <ContactCta />
       <Footer />
     </main>

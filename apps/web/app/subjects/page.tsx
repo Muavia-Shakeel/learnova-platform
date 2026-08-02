@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nav } from "../../components/marketing/Nav";
 import { Subjects } from "../../components/marketing/Subjects";
+import { HomeschoolingDetail } from "../../components/marketing/HomeschoolingDetail";
 import { ContactCta } from "../../components/marketing/ContactCta";
 import { Footer } from "../../components/marketing/Footer";
 
@@ -28,6 +29,7 @@ export default function SubjectsPage() {
         </div>
       </section>
       <Subjects />
+      <HomeschoolingDetail />
       <ContactCta />
       <Footer />
     </main>
