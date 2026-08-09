@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ConstellationMark } from "./ConstellationMark";
 import { MobileNav } from "./MobileNav";
 
 const LINKS = [
+  { href: "/", label: "Home" },
   { href: "/subjects", label: "Subjects" },
   { href: "/how-it-works", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
@@ -10,6 +14,8 @@ const LINKS = [
 ];
 
 export function Nav() {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-50 border-b border-deep-blue/10 bg-off-white/90 backdrop-blur">
       <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -17,15 +23,21 @@ export function Nav() {
           <ConstellationMark />
         </Link>
         <nav className="hidden items-center gap-8 sm:flex">
-          {LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-deep-blue/80 transition-colors hover:text-deep-blue"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {LINKS.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                className={`text-sm font-medium transition-colors hover:text-deep-blue ${
+                  isActive ? "text-deep-blue underline underline-offset-4" : "text-deep-blue/80"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
         <div className="hidden sm:block">
           <Link
