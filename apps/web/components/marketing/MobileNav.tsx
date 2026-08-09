@@ -44,6 +44,13 @@ export function MobileNav() {
             </Link>
           ))}
           <Link
+            href="/login"
+            onClick={() => setOpen(false)}
+            className="rounded-md px-2 py-2 text-sm font-medium text-deep-blue hover:bg-soft-blue/30"
+          >
+            Log in
+          </Link>
+          <Link
             href="/register"
             onClick={() => setOpen(false)}
             className="mt-2 rounded-full bg-sage-green px-4 py-2 text-center text-sm font-semibold text-white"

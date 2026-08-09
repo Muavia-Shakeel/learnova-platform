@@ -40,7 +40,10 @@ export function Nav() {
             );
           })}
         </nav>
-        <div className="hidden sm:block">
+        <div className="hidden items-center gap-4 sm:flex">
+          <Link href="/login" className="text-sm font-medium text-deep-blue/80 hover:text-deep-blue">
+            Log in
+          </Link>
           <Link
             href="/register"
             className="rounded-full bg-sage-green px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105"
