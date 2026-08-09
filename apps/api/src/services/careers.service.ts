@@ -4,6 +4,7 @@ import { TutorApplication } from "../models/tutorApplication.model";
 import { User } from "../models/user.model";
 import { TutorProfile } from "../models/tutorProfile.model";
 import { ApiError } from "../middleware/errorHandler";
+import * as emailService from "./email.service";
 
 export async function submitApplication(input: TutorApplicationInput) {
   const existingUser = await User.findOne({ email: input.email });
@@ -33,6 +34,12 @@ export async function submitApplication(input: TutorApplicationInput) {
     demoVideoUrl: input.demoVideoUrl,
     declarationAccepted: input.declarationAccepted,
   });
+
+  await Promise.all([
+    emailService.sendApplicationReceivedEmail(application.email, application.fullName),
+    emailService.sendNewApplicationAdminAlert(application.fullName, application.email),
+  ]);
+
   return application;
 }
 
@@ -65,6 +72,7 @@ export async function approveApplication(applicationId: string, adminId: string)
   await application.save();
 
   application.passwordHash = undefined as any;
+  await emailService.sendApplicationApprovedEmail(application.email, application.fullName);
   return application;
 }
 
@@ -79,5 +87,6 @@ export async function rejectApplication(applicationId: string, adminId: string, 
   application.reviewedAt = new Date();
   await application.save();
 
+  await emailService.sendApplicationRejectedEmail(application.email, application.fullName, rejectionReason);
   return application;
 }

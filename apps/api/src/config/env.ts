@@ -15,6 +15,8 @@ const EnvSchema = z.object({
   CLOUDINARY_API_KEY: z.string().optional(),
   CLOUDINARY_API_SECRET: z.string().optional(),
   CORS_ORIGIN: z.string().default("http://localhost:3000"),
+  RESEND_API_KEY: z.string().min(1),
+  EMAIL_FROM: z.string().default("Learnova <onboarding@resend.dev>"),
 });
 
 const parsed = EnvSchema.safeParse(process.env);
