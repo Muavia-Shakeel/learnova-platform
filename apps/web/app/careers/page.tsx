@@ -7,6 +7,7 @@ import { Footer } from "../../components/marketing/Footer";
 import { useSubjects } from "../../features/subjects/useSubjects";
 import { useSubmitApplication } from "../../features/careers/useCareers";
 import { ApiClientError } from "../../lib/api/client";
+import { uploadToCloudinary, validatePhotoFile, UploadValidationError } from "../../lib/upload/uploadToCloudinary";
 
 export default function CareersPage() {
   const router = useRouter();
@@ -24,6 +25,8 @@ export default function CareersPage() {
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
   const [profilePhotoUrl, setProfilePhotoUrl] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   // Page 2
   const [highestQualification, setHighestQualification] = useState("");
@@ -35,6 +38,30 @@ export default function CareersPage() {
   const [degreeCertificateUrl, setDegreeCertificateUrl] = useState("");
   const [demoVideoUrl, setDemoVideoUrl] = useState("");
   const [declarationAccepted, setDeclarationAccepted] = useState(false);
+
+  async function onPhotoSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setPhotoError(null);
+    try {
+      validatePhotoFile(file);
+    } catch (err) {
+      setPhotoError(err instanceof UploadValidationError ? err.message : "Invalid file");
+      e.target.value = "";
+      return;
+    }
+
+    setPhotoUploading(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      setProfilePhotoUrl(url);
+    } catch (err) {
+      setPhotoError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setPhotoUploading(false);
+    }
+  }
 
   function toggleSubject(id: string) {
     setSubjectIds((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
@@ -171,18 +198,39 @@ export default function CareersPage() {
                 onChange={(e) => setCountry(e.target.value)}
                 className="rounded-md border border-soft-blue px-4 py-2"
               />
-              <label className="flex flex-col gap-1 text-sm font-medium text-deep-blue">
-                Profile photo link (optional)
-                <input
-                  type="url"
-                  placeholder="https://drive.google.com/..."
-                  value={profilePhotoUrl}
-                  onChange={(e) => setProfilePhotoUrl(e.target.value)}
-                  className="rounded-md border border-soft-blue px-4 py-2 font-normal"
-                />
-              </label>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-deep-blue">Profile photo (optional)</label>
+                <p className="text-xs text-deep-blue/70">
+                  Front-facing headshot, plain/neutral background, face clearly visible. JPG, PNG, or
+                  WEBP, under 2MB.
+                </p>
 
-              <button type="submit" className="rounded-md bg-sage-green px-6 py-3 font-medium text-white">
+                <div className="flex items-center gap-4">
+                  {profilePhotoUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={profilePhotoUrl}
+                      alt="Profile preview"
+                      className="h-16 w-16 rounded-full object-cover"
+                    />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={onPhotoSelected}
+                    disabled={photoUploading}
+                    className="text-sm text-deep-blue"
+                  />
+                  {photoUploading && <span className="text-xs text-deep-blue/70">Uploading...</span>}
+                </div>
+                {photoError && <p className="text-xs text-red-600">{photoError}</p>}
+              </div>
+
+              <button
+                type="submit"
+                disabled={photoUploading}
+                className="rounded-md bg-sage-green px-6 py-3 font-medium text-white disabled:opacity-60"
+              >
                 Next
               </button>
             </form>
