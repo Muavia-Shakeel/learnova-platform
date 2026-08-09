@@ -7,13 +7,18 @@ export interface TutorApplicationInput {
   fullName: string;
   email: string;
   password: string;
-  whatsapp?: string;
+  phone: string;
+  country: string;
+  profilePhotoUrl?: string;
+  highestQualification: string;
+  institution: string;
   subjectIds: string[];
-  degrees: string[];
+  yearsOfExperience: number;
   bio?: string;
   cvUrl: string;
   degreeCertificateUrl: string;
   demoVideoUrl?: string;
+  declarationAccepted: true;
 }
 
 interface ApplicationResult {

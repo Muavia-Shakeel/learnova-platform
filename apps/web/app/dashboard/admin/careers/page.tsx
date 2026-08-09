@@ -44,7 +44,9 @@ export default function AdminCareersPage() {
               <div>
                 <p className="font-semibold text-deep-blue">{app.fullName}</p>
                 <p className="text-sm text-deep-blue/70">{app.email}</p>
-                {app.whatsapp && <p className="text-sm text-deep-blue/70">WhatsApp: {app.whatsapp}</p>}
+                <p className="text-sm text-deep-blue/70">
+                  {app.phone} · {app.country}
+                </p>
               </div>
               <div className="flex flex-wrap gap-1">
                 {app.subjectIds.map((s) => (
@@ -56,7 +58,12 @@ export default function AdminCareersPage() {
             </div>
 
             <p className="mt-3 text-sm text-deep-blue">
-              <span className="font-medium">Degrees:</span> {app.degrees.join(", ")}
+              <span className="font-medium">Qualification:</span> {app.highestQualification},{" "}
+              {app.institution}
+            </p>
+            <p className="mt-1 text-sm text-deep-blue">
+              <span className="font-medium">Experience:</span> {app.yearsOfExperience} year
+              {app.yearsOfExperience === 1 ? "" : "s"}
             </p>
             {app.bio && <p className="mt-1 text-sm text-deep-blue/80">{app.bio}</p>}
 
@@ -75,6 +82,11 @@ export default function AdminCareersPage() {
               {app.demoVideoUrl && (
                 <a href={app.demoVideoUrl} target="_blank" rel="noreferrer" className="font-semibold text-sage-green underline">
                   Watch demo video
+                </a>
+              )}
+              {app.profilePhotoUrl && (
+                <a href={app.profilePhotoUrl} target="_blank" rel="noreferrer" className="font-semibold text-sage-green underline">
+                  View profile photo
                 </a>
               )}
             </div>

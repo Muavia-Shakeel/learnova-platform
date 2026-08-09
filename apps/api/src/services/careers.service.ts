@@ -20,13 +20,18 @@ export async function submitApplication(input: TutorApplicationInput) {
     fullName: input.fullName,
     email: input.email,
     passwordHash,
-    whatsapp: input.whatsapp,
+    phone: input.phone,
+    country: input.country,
+    profilePhotoUrl: input.profilePhotoUrl,
+    highestQualification: input.highestQualification,
+    institution: input.institution,
     subjectIds: input.subjectIds,
-    degrees: input.degrees,
+    yearsOfExperience: input.yearsOfExperience,
     bio: input.bio,
     cvUrl: input.cvUrl,
     degreeCertificateUrl: input.degreeCertificateUrl,
     demoVideoUrl: input.demoVideoUrl,
+    declarationAccepted: input.declarationAccepted,
   });
   return application;
 }
@@ -41,13 +46,13 @@ export async function approveApplication(applicationId: string, adminId: string)
     passwordHash: application.passwordHash,
     fullName: application.fullName,
     role: "tutor",
-    whatsapp: application.whatsapp,
+    whatsapp: application.phone,
   });
 
   await TutorProfile.create({
     userId: user.id,
     subjectIds: application.subjectIds,
-    degrees: application.degrees,
+    degrees: [`${application.highestQualification}, ${application.institution}`],
     bio: application.bio,
     timezone: "Europe/London",
     weeklyAvailability: [],

@@ -8,9 +8,13 @@ export interface TutorApplication {
   _id: string;
   fullName: string;
   email: string;
-  whatsapp?: string;
+  phone: string;
+  country: string;
+  profilePhotoUrl?: string;
+  highestQualification: string;
+  institution: string;
   subjectIds: Array<{ _id: string; name: string }>;
-  degrees: string[];
+  yearsOfExperience: number;
   bio?: string;
   cvUrl: string;
   degreeCertificateUrl: string;
