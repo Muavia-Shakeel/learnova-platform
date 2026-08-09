@@ -19,6 +19,7 @@ import { adminRouter } from "./routes/admin.routes";
 import { tutorRouter } from "./routes/tutor.routes";
 import { studentRouter } from "./routes/student.routes";
 import { subjectRouter } from "./routes/subject.routes";
+import { careersRouter } from "./routes/careers.routes";
 
 export const app = express();
 
@@ -54,5 +55,6 @@ app.use("/api/admin", adminRouter);
 app.use("/api/tutors", tutorRouter);
 app.use("/api/students", studentRouter);
 app.use("/api/subjects", subjectRouter);
+app.use("/api/careers", careersRouter);
 
 app.use(errorHandler);

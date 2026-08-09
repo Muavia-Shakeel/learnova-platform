@@ -23,7 +23,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (loading) return <p className="p-10">Loading...</p>;
   if (!user) return null;
 
-  const links = user.role === "admin" ? [...NAV_LINKS, { href: "/dashboard/admin", label: "Admin" }] : NAV_LINKS;
+  const links =
+    user.role === "admin"
+      ? [
+          ...NAV_LINKS,
+          { href: "/dashboard/admin", label: "Payments" },
+          { href: "/dashboard/admin/careers", label: "Applications" },
+        ]
+      : NAV_LINKS;
 
   return (
     <div className="min-h-screen">
