@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { RegisterSchema, LoginSchema, RefreshTokenSchema } from "@learnova/shared-types";
+import { RegisterSchema, LoginSchema, RefreshTokenSchema, ChangePasswordSchema } from "@learnova/shared-types";
 import * as authService from "../services/auth.service";
 import { requireAuth } from "../middleware/auth";
 import { User } from "../models/user.model";
@@ -39,9 +39,19 @@ authRouter.post("/refresh", async (req, res, next) => {
 
 authRouter.get("/me", requireAuth, async (req, res, next) => {
   try {
-    const user = await User.findById(req.user!.id).select("email fullName role whatsapp");
+    const user = await User.findById(req.user!.id).select("email fullName role whatsapp mustChangePassword");
     if (!user) throw new ApiError(404, "USER_NOT_FOUND", "User not found");
     res.status(200).json({ data: user });
+  } catch (err) {
+    next(err);
+  }
+});
+
+authRouter.post("/change-password", requireAuth, async (req, res, next) => {
+  try {
+    const input = ChangePasswordSchema.parse(req.body);
+    await authService.changePassword(req.user!.id, input.currentPassword, input.newPassword);
+    res.status(200).json({ data: { success: true } });
   } catch (err) {
     next(err);
   }

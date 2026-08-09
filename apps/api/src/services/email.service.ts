@@ -1,5 +1,6 @@
 import { resend, EMAIL_FROM } from "../lib/resend";
 import { logger } from "../config/logger";
+import { env } from "../config/env";
 import { User } from "../models/user.model";
 
 async function send(to: string | string[], subject: string, html: string) {
@@ -16,7 +17,7 @@ export async function sendApplicationReceivedEmail(to: string, fullName: string)
     "Learnova — application received",
     `<p>Hi ${fullName},</p>
      <p>We've received your tutor application. Our team will review your CV, degree, and demo video and get back to you soon.</p>
-     <p>Once approved, you'll be able to log in with the email and password you just set.</p>
+     <p>If you're approved, we'll email you login details.</p>
      <p>— Learnova</p>`,
   );
 }
@@ -34,12 +35,15 @@ export async function sendNewApplicationAdminAlert(applicantName: string, applic
   );
 }
 
-export async function sendApplicationApprovedEmail(to: string, fullName: string) {
+export async function sendApplicationApprovedEmail(to: string, fullName: string, tempPassword: string) {
   await send(
     to,
     "You're approved to teach on Learnova",
     `<p>Hi ${fullName},</p>
-     <p>Your tutor application has been approved. You can now log in with the email and password you set when you applied.</p>
+     <p>Your tutor application has been approved. Log in with:</p>
+     <p>Email: ${to}<br />Temporary password: <strong>${tempPassword}</strong></p>
+     <p>You'll be asked to set a new password the first time you log in.</p>
+     <p><a href="${env.CORS_ORIGIN}/login">Log in to Learnova</a></p>
      <p>— Learnova</p>`,
   );
 }

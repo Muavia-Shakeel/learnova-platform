@@ -6,7 +6,6 @@ import { apiFetch } from "../../lib/api/client";
 export interface TutorApplicationInput {
   fullName: string;
   email: string;
-  password: string;
   phone: string;
   country: string;
   profilePhotoUrl?: string;

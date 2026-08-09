@@ -21,7 +21,6 @@ export default function CareersPage() {
   // Page 1
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
   const [profilePhotoUrl, setProfilePhotoUrl] = useState("");
@@ -85,7 +84,6 @@ export default function CareersPage() {
       await submitApplication.mutateAsync({
         fullName,
         email,
-        password,
         phone,
         country,
         profilePhotoUrl: profilePhotoUrl || undefined,
@@ -113,8 +111,8 @@ export default function CareersPage() {
           <div className="mx-auto max-w-xl px-6 text-center">
             <h1 className="font-display text-3xl font-bold text-deep-blue">Application received</h1>
             <p className="mt-4 text-deep-blue/80">
-              We&apos;ll review your CV, degree, and demo video. You&apos;ll be able to log in with the
-              email and password you just set once we approve your application.
+              We&apos;ll review your CV, degree, and demo video. If you&apos;re approved, we&apos;ll
+              email you a temporary password to log in with.
             </p>
             <button
               onClick={() => router.push("/")}
@@ -171,15 +169,6 @@ export default function CareersPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="rounded-md border border-soft-blue px-4 py-2"
-              />
-              <input
-                type="password"
-                placeholder="Set a password (for once you're approved)"
-                required
-                minLength={8}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="rounded-md border border-soft-blue px-4 py-2"
               />
               <input

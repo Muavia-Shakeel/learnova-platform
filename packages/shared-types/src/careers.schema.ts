@@ -7,7 +7,6 @@ export const TutorApplicationSchema = z.object({
   // Page 1
   fullName: z.string().min(1).max(120),
   email: z.string().email(),
-  password: z.string().min(8).max(128),
   phone: z.string().min(6).max(20),
   country: z.string().min(1).max(80),
   profilePhotoUrl: z.string().url().optional(),

@@ -30,3 +30,9 @@ export const Enable2FASchema = z.object({
   totpCode: z.string().length(6),
 });
 export type Enable2FAInput = z.infer<typeof Enable2FASchema>;
+
+export const ChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(8).max(128),
+});
+export type ChangePasswordInput = z.infer<typeof ChangePasswordSchema>;

@@ -48,6 +48,18 @@ export async function refresh(token: string) {
   return issueTokens(payload.sub, payload.role);
 }
 
+export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(404, "USER_NOT_FOUND", "User not found");
+
+  const valid = await bcrypt.compare(currentPassword, user.passwordHash);
+  if (!valid) throw new ApiError(401, "INVALID_CREDENTIALS", "Current password is incorrect");
+
+  user.passwordHash = await bcrypt.hash(newPassword, 12);
+  user.mustChangePassword = false;
+  await user.save();
+}
+
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
 }

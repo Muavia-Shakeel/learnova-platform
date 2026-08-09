@@ -7,6 +7,7 @@ const userSchema = new Schema(
     fullName: { type: String, required: true },
     role: { type: String, enum: ["student", "parent", "tutor", "admin"], required: true },
     whatsapp: { type: String },
+    mustChangePassword: { type: Boolean, default: false },
     twoFactor: {
       enabled: { type: Boolean, default: false },
       secret: { type: String },

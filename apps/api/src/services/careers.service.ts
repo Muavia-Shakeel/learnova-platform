@@ -1,10 +1,17 @@
+import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import type { TutorApplicationInput } from "@learnova/shared-types";
 import { TutorApplication } from "../models/tutorApplication.model";
 import { User } from "../models/user.model";
 import { TutorProfile } from "../models/tutorProfile.model";
 import { ApiError } from "../middleware/errorHandler";
+import { env } from "../config/env";
+import { logger } from "../config/logger";
 import * as emailService from "./email.service";
+
+function generateTempPassword(): string {
+  return randomBytes(9).toString("base64url"); // 12 chars, URL-safe
+}
 
 export async function submitApplication(input: TutorApplicationInput) {
   const existingUser = await User.findOne({ email: input.email });
@@ -16,11 +23,9 @@ export async function submitApplication(input: TutorApplicationInput) {
   });
   if (existingApplication) throw new ApiError(409, "APPLICATION_EXISTS", "An application with this email already exists");
 
-  const passwordHash = await bcrypt.hash(input.password, 12);
   const application = await TutorApplication.create({
     fullName: input.fullName,
     email: input.email,
-    passwordHash,
     phone: input.phone,
     country: input.country,
     profilePhotoUrl: input.profilePhotoUrl,
@@ -44,16 +49,23 @@ export async function submitApplication(input: TutorApplicationInput) {
 }
 
 export async function approveApplication(applicationId: string, adminId: string) {
-  const application = await TutorApplication.findById(applicationId).select("+passwordHash");
+  const application = await TutorApplication.findById(applicationId);
   if (!application) throw new ApiError(404, "APPLICATION_NOT_FOUND", "Application not found");
   if (application.status !== "pending") throw new ApiError(400, "ALREADY_REVIEWED", "Application already reviewed");
 
+  const tempPassword = generateTempPassword();
+  const passwordHash = await bcrypt.hash(tempPassword, 12);
+  if (env.NODE_ENV !== "production") {
+    logger.debug({ email: application.email, tempPassword }, "DEV ONLY: generated temp password");
+  }
+
   const user = await User.create({
     email: application.email,
-    passwordHash: application.passwordHash,
+    passwordHash,
     fullName: application.fullName,
     role: "tutor",
     whatsapp: application.phone,
+    mustChangePassword: true,
   });
 
   await TutorProfile.create({
@@ -71,8 +83,7 @@ export async function approveApplication(applicationId: string, adminId: string)
   application.resultingUserId = user.id;
   await application.save();
 
-  application.passwordHash = undefined as any;
-  await emailService.sendApplicationApprovedEmail(application.email, application.fullName);
+  await emailService.sendApplicationApprovedEmail(application.email, application.fullName, tempPassword);
   return application;
 }
 

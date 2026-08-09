@@ -17,11 +17,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) router.replace("/login");
+    if (loading) return;
+    if (!user) {
+      router.replace("/login");
+    } else if (user.mustChangePassword) {
+      router.replace("/change-password");
+    }
   }, [loading, user, router]);
 
   if (loading) return <p className="p-10">Loading...</p>;
-  if (!user) return null;
+  if (!user || user.mustChangePassword) return null;
 
   const links =
     user.role === "admin"

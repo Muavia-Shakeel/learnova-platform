@@ -9,6 +9,7 @@ interface CurrentUser {
   email: string;
   fullName: string;
   role: Role;
+  mustChangePassword: boolean;
 }
 
 interface AuthTokens {
@@ -23,6 +24,7 @@ interface AuthContextValue {
   login: (input: LoginInput) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -98,9 +100,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    if (accessToken) await loadMe(accessToken);
+  }, [accessToken, loadMe]);
+
   const value = useMemo(
-    () => ({ user, accessToken, loading, login, register, logout }),
-    [user, accessToken, loading, login, register, logout],
+    () => ({ user, accessToken, loading, login, register, logout, refreshUser }),
+    [user, accessToken, loading, login, register, logout, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
