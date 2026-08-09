@@ -1,11 +1,15 @@
 import { z } from "zod";
-import { RoleSchema } from "./role.schema";
+
+// Public self-registration is intentionally limited to parent/student.
+// Tutors are created only via the careers application + admin approval flow
+// (services/careers.service.ts), and admin accounts are never self-serve.
+const PublicRegisterRoleSchema = z.enum(["parent", "student"]);
 
 export const RegisterSchema = z.object({
   email: z.string().email().max(255),
   password: z.string().min(8).max(128),
   fullName: z.string().min(1).max(120),
-  role: RoleSchema.default("parent"),
+  role: PublicRegisterRoleSchema.default("parent"),
   whatsapp: z.string().min(6).max(20).optional(),
 });
 export type RegisterInput = z.infer<typeof RegisterSchema>;
