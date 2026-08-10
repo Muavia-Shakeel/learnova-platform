@@ -13,7 +13,7 @@ export interface TutorApplicationInput {
   institution: string;
   subjectIds: string[];
   yearsOfExperience: number;
-  bio?: string;
+  bio: string;
   cvUrl: string;
   degreeCertificateUrl: string;
   demoVideoUrl?: string;

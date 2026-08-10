@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Nav } from "../../components/marketing/Nav";
 import { Footer } from "../../components/marketing/Footer";
+import { LinkOrUploadField } from "../../components/careers/LinkOrUploadField";
 import { useSubjects } from "../../features/subjects/useSubjects";
 import { useSubmitApplication } from "../../features/careers/useCareers";
 import { ApiClientError } from "../../lib/api/client";
 import { uploadToCloudinary, validatePhotoFile, UploadValidationError } from "../../lib/upload/uploadToCloudinary";
+import { COUNTRIES } from "../../lib/data/countries";
 
 export default function CareersPage() {
   const router = useRouter();
@@ -21,7 +23,8 @@ export default function CareersPage() {
   // Page 1
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("+92");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [country, setCountry] = useState("");
   const [profilePhotoUrl, setProfilePhotoUrl] = useState("");
   const [photoUploading, setPhotoUploading] = useState(false);
@@ -84,14 +87,14 @@ export default function CareersPage() {
       await submitApplication.mutateAsync({
         fullName,
         email,
-        phone,
+        phone: `${countryCode} ${phoneNumber}`.trim(),
         country,
         profilePhotoUrl: profilePhotoUrl || undefined,
         highestQualification,
         institution,
         subjectIds,
         yearsOfExperience: Number(yearsOfExperience),
-        bio: bio || undefined,
+        bio,
         cvUrl,
         degreeCertificateUrl,
         demoVideoUrl: demoVideoUrl || undefined,
@@ -171,22 +174,44 @@ export default function CareersPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="rounded-md border border-soft-blue px-4 py-2"
               />
-              <input
-                type="text"
-                placeholder="Phone number"
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="rounded-md border border-soft-blue px-4 py-2"
-              />
-              <input
-                type="text"
-                placeholder="Country"
+
+              <div className="flex gap-2">
+                <select
+                  value={countryCode}
+                  onChange={(e) => setCountryCode(e.target.value)}
+                  className="w-28 rounded-md border border-soft-blue px-2 py-2"
+                  aria-label="Country code"
+                >
+                  {COUNTRIES.map((c) => (
+                    <option key={c.name} value={c.dialCode}>
+                      {c.dialCode}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="tel"
+                  placeholder="Phone number"
+                  required
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="flex-1 rounded-md border border-soft-blue px-4 py-2"
+                />
+              </div>
+
+              <select
                 required
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="rounded-md border border-soft-blue px-4 py-2"
-              />
+                className="rounded-md border border-soft-blue px-4 py-2 text-deep-blue"
+              >
+                <option value="">Select your country</option>
+                {COUNTRIES.map((c) => (
+                  <option key={c.name} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-deep-blue">Profile photo (optional)</label>
                 <p className="text-xs text-deep-blue/70">
@@ -279,46 +304,39 @@ export default function CareersPage() {
 
               <textarea
                 placeholder="Short bio (100–200 words)"
+                required
+                minLength={50}
                 rows={4}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 className="rounded-md border border-soft-blue px-4 py-2"
               />
 
-              <label className="flex flex-col gap-1 text-sm font-medium text-deep-blue">
-                Link to your CV
-                <input
-                  type="url"
-                  required
-                  placeholder="https://drive.google.com/..."
-                  value={cvUrl}
-                  onChange={(e) => setCvUrl(e.target.value)}
-                  className="rounded-md border border-soft-blue px-4 py-2 font-normal"
-                />
-              </label>
+              <LinkOrUploadField
+                label="CV"
+                kind="document"
+                required
+                value={cvUrl}
+                onChange={setCvUrl}
+                linkPlaceholder="https://drive.google.com/..."
+              />
 
-              <label className="flex flex-col gap-1 text-sm font-medium text-deep-blue">
-                Link to your degree certificate
-                <input
-                  type="url"
-                  required
-                  placeholder="https://drive.google.com/..."
-                  value={degreeCertificateUrl}
-                  onChange={(e) => setDegreeCertificateUrl(e.target.value)}
-                  className="rounded-md border border-soft-blue px-4 py-2 font-normal"
-                />
-              </label>
+              <LinkOrUploadField
+                label="Degree certificate"
+                kind="document"
+                required
+                value={degreeCertificateUrl}
+                onChange={setDegreeCertificateUrl}
+                linkPlaceholder="https://drive.google.com/..."
+              />
 
-              <label className="flex flex-col gap-1 text-sm font-medium text-deep-blue">
-                Link to a demo lesson video (optional)
-                <input
-                  type="url"
-                  placeholder="https://youtube.com/..."
-                  value={demoVideoUrl}
-                  onChange={(e) => setDemoVideoUrl(e.target.value)}
-                  className="rounded-md border border-soft-blue px-4 py-2 font-normal"
-                />
-              </label>
+              <LinkOrUploadField
+                label="Demo lesson video (optional)"
+                kind="video"
+                value={demoVideoUrl}
+                onChange={setDemoVideoUrl}
+                linkPlaceholder="https://youtube.com/..."
+              />
 
               <label className="flex items-start gap-2 text-sm text-deep-blue">
                 <input
@@ -342,8 +360,8 @@ export default function CareersPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={submitApplication.isPending}
-                  className="flex-1 rounded-md bg-sage-green px-6 py-3 font-medium text-white disabled:opacity-60"
+                  disabled={!declarationAccepted || submitApplication.isPending}
+                  className="flex-1 rounded-md bg-sage-green px-6 py-3 font-medium text-white disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {submitApplication.isPending ? "Submitting..." : "Submit application"}
                 </button>

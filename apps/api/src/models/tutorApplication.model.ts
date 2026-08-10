@@ -11,7 +11,7 @@ const tutorApplicationSchema = new Schema(
     institution: { type: String, required: true },
     subjectIds: [{ type: Schema.Types.ObjectId, ref: "Subject" }],
     yearsOfExperience: { type: Number, required: true, min: 0 },
-    bio: { type: String },
+    bio: { type: String, required: true },
     cvUrl: { type: String, required: true },
     degreeCertificateUrl: { type: String, required: true },
     demoVideoUrl: { type: String },

@@ -16,7 +16,7 @@ export const TutorApplicationSchema = z.object({
   institution: z.string().min(1).max(160),
   subjectIds: z.array(z.string().min(1)).default([]),
   yearsOfExperience: z.number().int().min(0).max(60),
-  bio: z.string().max(2000).optional(),
+  bio: z.string().min(50).max(2000),
   cvUrl: z.string().url(),
   degreeCertificateUrl: z.string().url(),
   demoVideoUrl: z.string().url().optional(),
