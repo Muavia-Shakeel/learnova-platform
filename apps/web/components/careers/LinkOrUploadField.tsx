@@ -57,7 +57,10 @@ export function LinkOrUploadField({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-deep-blue">{label}</label>
+      <label className="text-sm font-medium text-deep-blue">
+        {label}
+        {required && <span className="text-red-600"> *</span>}
+      </label>
       <div className="flex flex-col gap-2 sm:flex-row">
         <input
           type="url"
