@@ -10,7 +10,7 @@ resourceRouter.get("/", async (req, res, next) => {
   try {
     const { subjectId } = req.query as { subjectId?: string };
     const filter = subjectId ? { subjectId } : {};
-    const resources = await Resource.find(filter).sort({ createdAt: -1 });
+    const resources = await Resource.find(filter).populate("subjectId").sort({ createdAt: -1 });
     res.status(200).json({ data: resources });
   } catch (err) {
     next(err);

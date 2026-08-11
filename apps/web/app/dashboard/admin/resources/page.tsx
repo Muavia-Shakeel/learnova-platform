@@ -8,7 +8,7 @@ import { ApiClientError } from "../../../../lib/api/client";
 
 const TYPES: ResourceType[] = ["worksheet", "pdf", "slides", "practice-paper", "flashcards"];
 
-export default function TutorResourcesPage() {
+export default function AdminResourcesPage() {
   const { data: resources, isLoading } = useResources();
   const { data: subjects } = useSubjects();
   const createResource = useCreateResource();
@@ -36,7 +36,7 @@ export default function TutorResourcesPage() {
     <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
       <div>
         <h1 className="font-display text-2xl font-bold text-deep-blue">Resource library</h1>
-        <p className="mt-1 text-sm text-deep-blue/80">Worksheets, slides, and practice papers.</p>
+        <p className="mt-1 text-sm text-deep-blue/80">Worksheets, slides, and practice papers — visible to every tutor.</p>
 
         {isLoading && <p className="mt-6 text-sm text-deep-blue/70">Loading...</p>}
         {resources?.length === 0 && (

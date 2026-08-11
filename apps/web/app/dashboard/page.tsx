@@ -7,6 +7,9 @@ import { useStudents } from "../../features/student/useStudents";
 import { useLessons, type Lesson } from "../../features/student/useLessons";
 import { useMyStudents } from "../../features/tutor/useMyStudents";
 import { useMyCalendar } from "../../features/tutor/useMyCalendar";
+import { useAdminOverview } from "../../features/admin/useAdminOverview";
+import { useLeads } from "../../features/admin/useLeads";
+import { useTutors } from "../../features/tutor/useTutors";
 
 function formatLessonTime(startUtc: string) {
   return new Date(startUtc).toLocaleString(undefined, {
@@ -199,17 +202,78 @@ function TutorDashboard() {
 }
 
 function AdminDashboard() {
+  const { data: overview } = useAdminOverview();
+  const { data: tutors } = useTutors();
+  const { data: demoLeads } = useLeads("demo-booked");
+
   return (
-    <div className="flex flex-wrap gap-3">
-      <Link href="/dashboard/admin/students" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
-        Assign tutors
-      </Link>
-      <Link href="/dashboard/admin" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
-        Pending payments
-      </Link>
-      <Link href="/dashboard/admin/careers" className="rounded-md bg-sage-green px-5 py-2.5 text-sm font-semibold text-white">
-        Tutor applications
-      </Link>
+    <div className="flex flex-col gap-10">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-lg border border-soft-blue bg-white p-6">
+          <h2 className="text-sm text-deep-blue/70">Approved tutors</h2>
+          <p className="mt-2 text-3xl font-bold text-deep-blue">{overview?.activeTutors ?? tutors?.length ?? "..."}</p>
+        </div>
+        <div className="rounded-lg border border-soft-blue bg-white p-6">
+          <h2 className="text-sm text-deep-blue/70">Students</h2>
+          <p className="mt-2 text-3xl font-bold text-deep-blue">{overview?.students ?? "..."}</p>
+        </div>
+        <div className="rounded-lg border border-soft-blue bg-white p-6">
+          <h2 className="text-sm text-deep-blue/70">Demos booked</h2>
+          <p className="mt-2 text-3xl font-bold text-deep-blue">{demoLeads?.length ?? "..."}</p>
+        </div>
+        <div className="rounded-lg border border-soft-blue bg-white p-6">
+          <h2 className="text-sm text-deep-blue/70">Pending payments</h2>
+          <p className="mt-2 text-3xl font-bold text-deep-blue">{overview?.pendingPayments ?? "..."}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <Link href="/dashboard/admin/students" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+          Assign tutors
+        </Link>
+        <Link href="/dashboard/admin/leads" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+          Assign demos
+        </Link>
+        <Link href="/dashboard/admin" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+          Pending payments
+        </Link>
+        <Link href="/dashboard/admin/careers" className="rounded-md bg-sage-green px-5 py-2.5 text-sm font-semibold text-white">
+          Tutor applications
+        </Link>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div>
+          <h2 className="font-display text-xl font-bold text-deep-blue">Approved tutors</h2>
+          {tutors?.length === 0 && <p className="mt-2 text-sm text-deep-blue/70">No approved tutors yet.</p>}
+          <div className="mt-3 flex flex-col gap-2">
+            {tutors?.map((t) => (
+              <div key={t._id} className="rounded-lg border border-deep-blue/10 bg-white p-3 text-sm">
+                <p className="font-medium text-deep-blue">{t.userId.fullName}</p>
+                <p className="text-deep-blue/70">
+                  {t.subjectIds.map((s) => s.name).join(", ") || "No subjects set"}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h2 className="font-display text-xl font-bold text-deep-blue">Demo bookings</h2>
+          {demoLeads?.length === 0 && <p className="mt-2 text-sm text-deep-blue/70">No demos booked.</p>}
+          <div className="mt-3 flex flex-col gap-2">
+            {demoLeads?.map((lead) => (
+              <div key={lead._id} className="rounded-lg border border-deep-blue/10 bg-white p-3 text-sm">
+                <p className="font-medium text-deep-blue">{lead.fullName}</p>
+                <p className="text-deep-blue/70">
+                  {lead.email} ·{" "}
+                  {lead.assignedStaffId ? `assigned: ${lead.assignedStaffId.fullName}` : "unassigned"}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

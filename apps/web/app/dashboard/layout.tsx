@@ -28,6 +28,9 @@ const TUTOR_LINKS = [
 const ADMIN_LINKS = [
   { href: "/dashboard", label: "Overview" },
   { href: "/dashboard/admin/students", label: "Students" },
+  { href: "/dashboard/admin/leads", label: "Leads & Demos" },
+  { href: "/dashboard/admin/subjects", label: "Subjects" },
+  { href: "/dashboard/admin/resources", label: "Resources" },
   { href: "/dashboard/admin", label: "Payments" },
   { href: "/dashboard/admin/careers", label: "Applications" },
 ];

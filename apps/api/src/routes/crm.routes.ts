@@ -19,7 +19,9 @@ crmRouter.use(requireAuth, requireRole("admin"));
 
 crmRouter.get("/leads", async (req, res, next) => {
   try {
-    const leads = await Lead.find().sort({ createdAt: -1 });
+    const { status } = req.query as { status?: string };
+    const filter = status ? { status } : {};
+    const leads = await Lead.find(filter).populate("assignedStaffId", "fullName email").sort({ createdAt: -1 });
     res.status(200).json({ data: leads });
   } catch (err) {
     next(err);
@@ -29,7 +31,10 @@ crmRouter.get("/leads", async (req, res, next) => {
 crmRouter.patch("/leads/:id", async (req, res, next) => {
   try {
     const { status, assignedStaffId } = req.body as { status?: string; assignedStaffId?: string };
-    const lead = await Lead.findByIdAndUpdate(req.params.id, { status, assignedStaffId }, { new: true });
+    const lead = await Lead.findByIdAndUpdate(req.params.id, { status, assignedStaffId }, { new: true }).populate(
+      "assignedStaffId",
+      "fullName email",
+    );
     res.status(200).json({ data: lead });
   } catch (err) {
     next(err);
