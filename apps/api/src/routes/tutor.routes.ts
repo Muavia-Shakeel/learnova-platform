@@ -5,8 +5,17 @@ import { requireAuth, requireRole } from "../middleware/auth";
 import { TutorProfile } from "../models/tutorProfile.model";
 import { Lesson } from "../models/lesson.model";
 
+function isValidTimezone(tz: string) {
+  try {
+    Intl.DateTimeFormat(undefined, { timeZone: tz });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const UpdateAvailabilitySchema = z.object({
-  timezone: z.string().min(1),
+  timezone: z.string().min(1).refine(isValidTimezone, "Must be a valid IANA timezone, e.g. Asia/Karachi"),
   weeklyAvailability: z.array(WeeklySlotSchema),
 });
 

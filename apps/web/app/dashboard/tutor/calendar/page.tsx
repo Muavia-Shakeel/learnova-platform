@@ -7,6 +7,12 @@ import {
   type WeeklySlot,
 } from "../../../../features/tutor/useAvailability";
 import { useMyCalendar, useMarkLessonComplete } from "../../../../features/tutor/useMyCalendar";
+import { ApiClientError } from "../../../../lib/api/client";
+
+const TIMEZONES: string[] =
+  typeof Intl !== "undefined" && "supportedValuesOf" in Intl
+    ? (Intl as unknown as { supportedValuesOf: (key: string) => string[] }).supportedValuesOf("timeZone")
+    : ["Asia/Karachi", "Europe/London", "America/New_York", "Asia/Dubai"];
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -45,6 +51,7 @@ export default function TutorCalendarPage() {
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("17:00");
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (profile) {
@@ -66,8 +73,17 @@ export default function TutorCalendarPage() {
 
   async function saveAvailability() {
     setSaved(false);
-    await updateAvailability.mutateAsync({ timezone, weeklyAvailability: slots });
-    setSaved(true);
+    setError(null);
+    if (!TIMEZONES.includes(timezone)) {
+      setError("Not a valid timezone — pick one from the list, e.g. Asia/Karachi.");
+      return;
+    }
+    try {
+      await updateAvailability.mutateAsync({ timezone, weeklyAvailability: slots });
+      setSaved(true);
+    } catch (err) {
+      setError(err instanceof ApiClientError ? err.message : "Could not save availability");
+    }
   }
 
   const upcoming = lessons?.filter((l) => l.status === "booked" || l.status === "rescheduled" || l.status === "ad-hoc");
@@ -86,11 +102,17 @@ export default function TutorCalendarPage() {
             Timezone
             <input
               type="text"
+              list="timezone-options"
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
-              placeholder="Europe/London"
+              placeholder="Asia/Karachi"
               className="rounded-md border border-soft-blue px-3 py-2 font-normal"
             />
+            <datalist id="timezone-options">
+              {TIMEZONES.map((tz) => (
+                <option key={tz} value={tz} />
+              ))}
+            </datalist>
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium text-deep-blue">
             Day
@@ -156,6 +178,7 @@ export default function TutorCalendarPage() {
         >
           {updateAvailability.isPending ? "Saving..." : "Save availability"}
         </button>
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
         {saved && <p className="mt-2 text-sm text-sage-green">Availability saved.</p>}
       </div>
 
