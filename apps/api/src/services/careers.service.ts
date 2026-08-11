@@ -54,7 +54,7 @@ export async function approveApplication(applicationId: string, adminId: string)
   if (application.status !== "pending") throw new ApiError(400, "ALREADY_REVIEWED", "Application already reviewed");
 
   const tempPassword = generateTempPassword();
-  const passwordHash = await bcrypt.hash(tempPassword, 12);
+  const passwordHash = await bcrypt.hash(tempPassword, 10);
   if (env.NODE_ENV !== "production") {
     logger.debug({ email: application.email, tempPassword }, "DEV ONLY: generated temp password");
   }

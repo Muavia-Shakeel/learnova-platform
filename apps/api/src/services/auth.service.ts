@@ -11,7 +11,7 @@ export async function register(input: RegisterInput) {
   const existing = await User.findOne({ email: input.email });
   if (existing) throw new ApiError(409, "EMAIL_TAKEN", "Email already registered");
 
-  const passwordHash = await bcrypt.hash(input.password, 12);
+  const passwordHash = await bcrypt.hash(input.password, 10);
   const user = await User.create({
     email: input.email,
     passwordHash,
@@ -55,7 +55,7 @@ export async function changePassword(userId: string, currentPassword: string, ne
   const valid = await bcrypt.compare(currentPassword, user.passwordHash);
   if (!valid) throw new ApiError(401, "INVALID_CREDENTIALS", "Current password is incorrect");
 
-  user.passwordHash = await bcrypt.hash(newPassword, 12);
+  user.passwordHash = await bcrypt.hash(newPassword, 10);
   user.mustChangePassword = false;
   await user.save();
 }
