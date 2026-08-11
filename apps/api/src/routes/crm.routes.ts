@@ -21,7 +21,10 @@ crmRouter.get("/leads", async (req, res, next) => {
   try {
     const { status } = req.query as { status?: string };
     const filter = status ? { status } : {};
-    const leads = await Lead.find(filter).populate("assignedStaffId", "fullName email").sort({ createdAt: -1 });
+    const leads = await Lead.find(filter)
+      .populate("assignedStaffId", "fullName email")
+      .populate("subjectId")
+      .sort({ createdAt: -1 });
     res.status(200).json({ data: leads });
   } catch (err) {
     next(err);

@@ -6,6 +6,7 @@ import { Lesson } from "../models/lesson.model";
 import { Payment } from "../models/payment.model";
 import { StudentProfile } from "../models/studentProfile.model";
 import { TutorProfile } from "../models/tutorProfile.model";
+import { User } from "../models/user.model";
 import { Lead } from "../models/lead.model";
 import { TutorApplication } from "../models/tutorApplication.model";
 import * as careersService from "../services/careers.service";
@@ -49,6 +50,19 @@ adminRouter.get("/dashboard", async (_req, res, next) => {
         newEnquiries,
       },
     });
+  } catch (err) {
+    next(err);
+  }
+});
+
+adminRouter.get("/incomplete-signups", async (_req, res, next) => {
+  try {
+    const profiledParentIds = await StudentProfile.distinct("parentId");
+    const users = await User.find(
+      { role: { $in: ["student", "parent"] }, _id: { $nin: profiledParentIds } },
+      "fullName email role createdAt",
+    ).sort({ createdAt: -1 });
+    res.status(200).json({ data: users });
   } catch (err) {
     next(err);
   }

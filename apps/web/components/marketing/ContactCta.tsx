@@ -13,7 +13,7 @@ export function ContactCta() {
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <a
-            href="/register"
+            href="/book-demo"
             className="rounded-full bg-sage-green px-7 py-3.5 font-semibold text-white transition-transform hover:scale-105"
           >
             Book a Free Trial

@@ -45,7 +45,7 @@ export function Nav() {
             Log in
           </Link>
           <Link
-            href="/register"
+            href="/book-demo"
             className="rounded-full bg-sage-green px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105"
           >
             Book a Free Trial

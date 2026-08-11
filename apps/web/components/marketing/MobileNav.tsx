@@ -51,7 +51,7 @@ export function MobileNav() {
             Log in
           </Link>
           <Link
-            href="/register"
+            href="/book-demo"
             onClick={() => setOpen(false)}
             className="mt-2 rounded-full bg-sage-green px-4 py-2 text-center text-sm font-semibold text-white"
           >

@@ -52,6 +52,10 @@ export default function AdminLeadsPage() {
                 {lead.email}
                 {lead.whatsapp ? ` · ${lead.whatsapp}` : ""}
               </p>
+              <p className="text-sm text-deep-blue/70">
+                {[lead.country, lead.grade, lead.subjectId?.name].filter(Boolean).join(" · ") || "No details given"}
+              </p>
+              {lead.notes && <p className="mt-1 text-sm italic text-deep-blue/70">&ldquo;{lead.notes}&rdquo;</p>}
               <p className="mt-1 text-sm">
                 <span className="font-medium text-deep-blue">Tutor: </span>
                 {lead.assignedStaffId ? (

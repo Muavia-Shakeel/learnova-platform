@@ -31,6 +31,10 @@ export const LeadSchema = z.object({
   fullName: z.string().min(1).max(120),
   email: z.string().email(),
   whatsapp: z.string().min(6).max(20).optional(),
+  country: z.string().max(80).optional(),
+  grade: z.string().max(40).optional(),
+  subjectId: z.string().min(1).optional(),
+  notes: z.string().max(1000).optional(),
   status: CrmLeadStatusSchema.default("new"),
   assignedStaffId: z.string().min(1).optional(),
 });

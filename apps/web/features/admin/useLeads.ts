@@ -11,6 +11,10 @@ export interface Lead {
   fullName: string;
   email: string;
   whatsapp?: string;
+  country?: string;
+  grade?: string;
+  subjectId?: { _id: string; name: string };
+  notes?: string;
   status: LeadStatus;
   assignedStaffId?: { _id: string; fullName: string; email: string };
   createdAt: string;

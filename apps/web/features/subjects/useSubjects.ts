@@ -16,7 +16,6 @@ export function useSubjects() {
   return useQuery({
     queryKey: ["subjects"],
     queryFn: () => apiFetch<Subject[]>("/api/subjects", { token: accessToken ?? undefined }),
-    enabled: !!accessToken,
   });
 }
 

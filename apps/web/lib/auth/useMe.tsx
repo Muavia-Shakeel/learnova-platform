@@ -22,7 +22,7 @@ interface AuthContextValue {
   accessToken: string | null;
   loading: boolean;
   login: (input: LoginInput) => Promise<void>;
-  register: (input: RegisterInput) => Promise<void>;
+  register: (input: RegisterInput) => Promise<AuthTokens>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -90,6 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       writeStoredTokens(tokens);
       setAccessToken(tokens.accessToken);
       await loadMe(tokens.accessToken);
+      return tokens;
     },
     [loadMe],
   );

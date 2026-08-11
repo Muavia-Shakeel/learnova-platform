@@ -10,6 +10,7 @@ import { useMyCalendar } from "../../features/tutor/useMyCalendar";
 import { useAdminOverview } from "../../features/admin/useAdminOverview";
 import { useLeads } from "../../features/admin/useLeads";
 import { useTutors } from "../../features/tutor/useTutors";
+import { useIncompleteSignups } from "../../features/admin/useIncompleteSignups";
 
 function formatLessonTime(startUtc: string) {
   return new Date(startUtc).toLocaleString(undefined, {
@@ -205,6 +206,7 @@ function AdminDashboard() {
   const { data: overview } = useAdminOverview();
   const { data: tutors } = useTutors();
   const { data: demoLeads } = useLeads("demo-booked");
+  const { data: incompleteSignups } = useIncompleteSignups();
 
   return (
     <div className="flex flex-col gap-10">
@@ -274,6 +276,31 @@ function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {incompleteSignups && incompleteSignups.length > 0 && (
+        <div>
+          <h2 className="font-display text-xl font-bold text-deep-blue">Incomplete signups</h2>
+          <p className="mt-1 text-sm text-deep-blue/70">
+            Signed up but never finished their profile — worth a follow-up.
+          </p>
+          <div className="mt-3 flex flex-col gap-2">
+            {incompleteSignups.map((u) => (
+              <div
+                key={u._id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-deep-blue/10 bg-white p-3 text-sm"
+              >
+                <div>
+                  <p className="font-medium text-deep-blue">{u.fullName}</p>
+                  <p className="text-deep-blue/70">{u.email}</p>
+                </div>
+                <span className="rounded-full bg-soft-blue/40 px-2 py-0.5 text-xs capitalize text-deep-blue">
+                  {u.role}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
