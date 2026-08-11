@@ -1,42 +1,56 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toUtc } from "@learnova/shared-tz";
 import { useStudents } from "../../../features/student/useStudents";
-import { useTutors } from "../../../features/tutor/useTutors";
+import { useSubjects } from "../../../features/subjects/useSubjects";
+import { useTutorProfile } from "../../../features/tutor/useTutorProfile";
 import { useBookLesson } from "../../../features/student/useLessons";
 import { ApiClientError } from "../../../lib/api/client";
 
 export default function BookLessonPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const preselectedTutorId = searchParams.get("tutorId") ?? "";
 
   const { data: students } = useStudents();
-  const { data: tutors } = useTutors();
+  const { data: subjects } = useSubjects();
   const bookLesson = useBookLesson();
 
   const [studentId, setStudentId] = useState("");
-  const [tutorId, setTutorId] = useState(preselectedTutorId);
   const [subjectId, setSubjectId] = useState("");
   const [localDateTime, setLocalDateTime] = useState("");
   const [durationHours, setDurationHours] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const selectedTutor = tutors?.find((t) => t.userId._id === tutorId);
+  const selectedStudent = students?.find((s) => s._id === studentId);
+  const { data: assignedTutor } = useTutorProfile(selectedStudent?.assignedTutorId);
+  const availableSubjects = subjects?.filter((s) => selectedStudent?.subjectIds.includes(s._id));
+
+  useEffect(() => {
+    setSubjectId("");
+  }, [studentId]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setSuccess(false);
+    if (!selectedStudent?.assignedTutorId) {
+      setError("No tutor assigned yet — contact admin to get a tutor assigned before booking.");
+      return;
+    }
     try {
       const browserZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const startUtc = toUtc(localDateTime, browserZone).toISO();
       if (!startUtc) throw new Error("Invalid date/time");
 
-      await bookLesson.mutateAsync({ studentId, tutorId, subjectId, startUtc, durationHours });
+      await bookLesson.mutateAsync({
+        studentId,
+        tutorId: selectedStudent.assignedTutorId,
+        subjectId,
+        startUtc,
+        durationHours,
+      });
       setSuccess(true);
       setTimeout(() => router.push("/dashboard"), 1200);
     } catch (err) {
@@ -75,22 +89,18 @@ export default function BookLessonPage() {
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-deep-blue">
-          Tutor
-          <select
-            required
-            value={tutorId}
-            onChange={(e) => setTutorId(e.target.value)}
-            className="rounded-md border border-soft-blue px-4 py-2 font-normal"
-          >
-            <option value="">Select a tutor</option>
-            {tutors?.map((t) => (
-              <option key={t._id} value={t.userId._id}>
-                {t.userId.fullName}
-              </option>
-            ))}
-          </select>
-        </label>
+        {studentId && (
+          <div className="rounded-md border border-soft-blue bg-off-white px-4 py-3 text-sm">
+            <span className="font-medium text-deep-blue">Tutor: </span>
+            {!selectedStudent?.assignedTutorId ? (
+              <span className="text-red-600">
+                No tutor assigned yet — contact admin to get one assigned.
+              </span>
+            ) : (
+              <span className="text-deep-blue/80">{assignedTutor?.userId?.fullName ?? "Loading..."}</span>
+            )}
+          </div>
+        )}
 
         <label className="flex flex-col gap-1 text-sm font-medium text-deep-blue">
           Subject
@@ -98,10 +108,11 @@ export default function BookLessonPage() {
             required
             value={subjectId}
             onChange={(e) => setSubjectId(e.target.value)}
-            className="rounded-md border border-soft-blue px-4 py-2 font-normal"
+            disabled={!selectedStudent?.assignedTutorId}
+            className="rounded-md border border-soft-blue px-4 py-2 font-normal disabled:opacity-60"
           >
             <option value="">Select a subject</option>
-            {selectedTutor?.subjectIds.map((s) => (
+            {availableSubjects?.map((s) => (
               <option key={s._id} value={s._id}>
                 {s.name}
               </option>
@@ -139,7 +150,7 @@ export default function BookLessonPage() {
 
         <button
           type="submit"
-          disabled={bookLesson.isPending}
+          disabled={bookLesson.isPending || !selectedStudent?.assignedTutorId}
           className="rounded-md bg-sage-green px-6 py-3 font-medium text-white disabled:opacity-60"
         >
           {bookLesson.isPending ? "Booking..." : "Book lesson"}

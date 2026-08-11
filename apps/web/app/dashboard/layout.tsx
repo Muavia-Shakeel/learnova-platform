@@ -9,14 +9,12 @@ import type { Role } from "@learnova/shared-types";
 const PARENT_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/dashboard/students", label: "Students" },
-  { href: "/dashboard/tutors", label: "Tutors" },
   { href: "/dashboard/billing", label: "Billing" },
 ];
 
 const STUDENT_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/dashboard/students", label: "My Profile" },
-  { href: "/dashboard/tutors", label: "Find a Tutor" },
   { href: "/dashboard/billing", label: "Billing" },
 ];
 
@@ -29,6 +27,7 @@ const TUTOR_LINKS = [
 
 const ADMIN_LINKS = [
   { href: "/dashboard", label: "Overview" },
+  { href: "/dashboard/admin/students", label: "Students" },
   { href: "/dashboard/admin", label: "Payments" },
   { href: "/dashboard/admin/careers", label: "Applications" },
 ];

@@ -25,6 +25,18 @@ studentRouter.post("/", requireRole("parent", "admin", "student"), async (req, r
   }
 });
 
+studentRouter.get("/", requireRole("admin"), async (req, res, next) => {
+  try {
+    const students = await StudentProfile.find()
+      .populate("subjectIds")
+      .populate("assignedTutorId", "fullName email")
+      .populate("parentId", "fullName email");
+    res.status(200).json({ data: students });
+  } catch (err) {
+    next(err);
+  }
+});
+
 studentRouter.get("/parent/:parentId", async (req, res, next) => {
   try {
     const students = await StudentProfile.find({ parentId: req.params.parentId });

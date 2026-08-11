@@ -68,8 +68,8 @@ function ParentDashboard() {
         <Link href="/dashboard/students" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
           Add a student
         </Link>
-        <Link href="/dashboard/tutors" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
-          Find a tutor
+        <Link href="/dashboard/book" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+          Book a lesson
         </Link>
         <Link href="/dashboard/billing" className="rounded-md bg-sage-green px-5 py-2.5 text-sm font-semibold text-white">
           Buy credits
@@ -122,8 +122,8 @@ function StudentDashboard() {
         <Link href="/dashboard/students" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
           {profile ? "Edit my profile" : "Set up my profile"}
         </Link>
-        <Link href="/dashboard/tutors" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
-          Find a tutor
+        <Link href="/dashboard/book" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+          Book a lesson
         </Link>
         <Link href="/dashboard/billing" className="rounded-md bg-sage-green px-5 py-2.5 text-sm font-semibold text-white">
           Buy credits
@@ -201,6 +201,9 @@ function TutorDashboard() {
 function AdminDashboard() {
   return (
     <div className="flex flex-wrap gap-3">
+      <Link href="/dashboard/admin/students" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+        Assign tutors
+      </Link>
       <Link href="/dashboard/admin" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
         Pending payments
       </Link>
