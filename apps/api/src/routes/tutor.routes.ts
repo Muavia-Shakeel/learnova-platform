@@ -27,7 +27,9 @@ tutorRouter.get("/", async (req, res, next) => {
 
 tutorRouter.get("/:id", async (req, res, next) => {
   try {
-    const tutor = await TutorProfile.findOne({ userId: req.params.id }).populate("subjectIds");
+    const tutor = await TutorProfile.findOne({ userId: req.params.id })
+      .populate("subjectIds")
+      .populate("userId", "fullName email");
     res.status(200).json({ data: tutor });
   } catch (err) {
     next(err);
@@ -36,7 +38,10 @@ tutorRouter.get("/:id", async (req, res, next) => {
 
 tutorRouter.get("/:id/calendar", requireAuth, async (req, res, next) => {
   try {
-    const lessons = await Lesson.find({ tutorId: req.params.id }).sort({ startUtc: 1 });
+    const lessons = await Lesson.find({ tutorId: req.params.id })
+      .populate("studentId", "fullName")
+      .populate("subjectId", "name")
+      .sort({ startUtc: 1 });
     res.status(200).json({ data: lessons });
   } catch (err) {
     next(err);

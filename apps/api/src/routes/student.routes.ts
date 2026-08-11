@@ -26,6 +26,15 @@ studentRouter.get("/parent/:parentId", async (req, res, next) => {
   }
 });
 
+studentRouter.get("/tutor/:tutorId", async (req, res, next) => {
+  try {
+    const students = await StudentProfile.find({ assignedTutorId: req.params.tutorId }).populate("subjectIds");
+    res.status(200).json({ data: students });
+  } catch (err) {
+    next(err);
+  }
+});
+
 studentRouter.get("/:id", async (req, res, next) => {
   try {
     const student = await StudentProfile.findById(req.params.id).populate("subjectIds");

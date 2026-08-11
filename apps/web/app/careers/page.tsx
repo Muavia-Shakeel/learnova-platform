@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Nav } from "../../components/marketing/Nav";
 import { Footer } from "../../components/marketing/Footer";
-import { LinkOrUploadField } from "../../components/careers/LinkOrUploadField";
+import { LinkOrUploadField } from "../../components/shared/LinkOrUploadField";
 import { useSubjects } from "../../features/subjects/useSubjects";
 import { useSubmitApplication } from "../../features/careers/useCareers";
 import { ApiClientError } from "../../lib/api/client";
