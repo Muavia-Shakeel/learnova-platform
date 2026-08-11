@@ -13,6 +13,13 @@ const PARENT_LINKS = [
   { href: "/dashboard/billing", label: "Billing" },
 ];
 
+const STUDENT_LINKS = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/dashboard/students", label: "My Profile" },
+  { href: "/dashboard/tutors", label: "Find a Tutor" },
+  { href: "/dashboard/billing", label: "Billing" },
+];
+
 const TUTOR_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/dashboard/tutor/students", label: "My Students" },
@@ -29,6 +36,7 @@ const ADMIN_LINKS = [
 function navLinksFor(role: Role) {
   if (role === "tutor") return TUTOR_LINKS;
   if (role === "admin") return ADMIN_LINKS;
+  if (role === "student") return STUDENT_LINKS;
   return PARENT_LINKS;
 }
 

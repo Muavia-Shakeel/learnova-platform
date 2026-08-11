@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStudents, useCreateStudent } from "../../../features/student/useStudents";
 import { useSubjects } from "../../../features/subjects/useSubjects";
+import { useAuth } from "../../../lib/auth/useMe";
 import { ApiClientError } from "../../../lib/api/client";
 
 export default function StudentsPage() {
+  const { user } = useAuth();
+  const isSelf = user?.role === "student";
   const { data: students, isLoading } = useStudents();
   const { data: subjects } = useSubjects();
   const createStudent = useCreateStudent();
+  const hasProfile = isSelf && (students?.length ?? 0) > 0;
 
   const [fullName, setFullName] = useState("");
   const [country, setCountry] = useState("");
@@ -16,6 +20,10 @@ export default function StudentsPage() {
   const [grade, setGrade] = useState("");
   const [subjectIds, setSubjectIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isSelf && user?.fullName) setFullName(user.fullName);
+  }, [isSelf, user?.fullName]);
 
   function toggleSubject(id: string) {
     setSubjectIds((prev) => (prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]));
@@ -39,14 +47,20 @@ export default function StudentsPage() {
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
       <div>
-        <h1 className="font-display text-2xl font-bold text-deep-blue">Your students</h1>
-        <p className="mt-1 text-sm text-deep-blue/80">Children linked to your account.</p>
+        <h1 className="font-display text-2xl font-bold text-deep-blue">
+          {isSelf ? "Your profile" : "Your students"}
+        </h1>
+        <p className="mt-1 text-sm text-deep-blue/80">
+          {isSelf ? "Your learner profile — used to match tutors and subjects." : "Children linked to your account."}
+        </p>
 
         <div className="mt-6 flex flex-col gap-3">
           {isLoading && <p className="text-sm text-deep-blue/70">Loading...</p>}
           {students?.length === 0 && (
             <p className="rounded-lg border border-dashed border-deep-blue/20 p-6 text-sm text-deep-blue/70">
-              No students yet — add your child on the right to start booking lessons.
+              {isSelf
+                ? "Set up your profile on the right to start booking lessons."
+                : "No students yet — add your child on the right to start booking lessons."}
             </p>
           )}
           {students?.map((s) => (
@@ -60,9 +74,12 @@ export default function StudentsPage() {
         </div>
       </div>
 
-      <div>
-        <h2 className="font-display text-xl font-bold text-deep-blue">Add a student</h2>
-        <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-4">
+      {!hasProfile && (
+        <div>
+          <h2 className="font-display text-xl font-bold text-deep-blue">
+            {isSelf ? "Set up your profile" : "Add a student"}
+          </h2>
+          <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-4">
           <input
             type="text"
             placeholder="Full name"
@@ -124,10 +141,11 @@ export default function StudentsPage() {
             disabled={createStudent.isPending}
             className="rounded-md bg-sage-green px-6 py-3 font-medium text-white disabled:opacity-60"
           >
-            {createStudent.isPending ? "Adding..." : "Add student"}
+            {createStudent.isPending ? "Saving..." : isSelf ? "Save profile" : "Add student"}
           </button>
-        </form>
-      </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

@@ -94,6 +94,58 @@ function ParentDashboard() {
   );
 }
 
+function StudentDashboard() {
+  const { data: wallet, isLoading, error } = useWallet();
+  const { data: students } = useStudents();
+  const profile = students?.[0];
+
+  return (
+    <div className="flex flex-col gap-10">
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="rounded-lg border border-soft-blue bg-white p-6">
+          <h2 className="text-sm text-deep-blue/70">Remaining credits</h2>
+          {isLoading && <p className="mt-2 text-3xl font-bold">...</p>}
+          {error && <p className="mt-2 text-sm text-red-600">Could not load wallet</p>}
+          {wallet && <p className="mt-2 text-3xl font-bold text-deep-blue">{wallet.remaining}</p>}
+        </div>
+        <div className="rounded-lg border border-soft-blue bg-white p-6">
+          <h2 className="text-sm text-deep-blue/70">Purchased</h2>
+          {wallet && <p className="mt-2 text-3xl font-bold text-deep-blue">{wallet.purchased}</p>}
+        </div>
+        <div className="rounded-lg border border-soft-blue bg-white p-6">
+          <h2 className="text-sm text-deep-blue/70">Used</h2>
+          {wallet && <p className="mt-2 text-3xl font-bold text-deep-blue">{wallet.used}</p>}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <Link href="/dashboard/students" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+          {profile ? "Edit my profile" : "Set up my profile"}
+        </Link>
+        <Link href="/dashboard/tutors" className="rounded-md border-2 border-deep-blue px-5 py-2.5 text-sm font-semibold text-deep-blue">
+          Find a tutor
+        </Link>
+        <Link href="/dashboard/billing" className="rounded-md bg-sage-green px-5 py-2.5 text-sm font-semibold text-white">
+          Buy credits
+        </Link>
+      </div>
+
+      <div>
+        <h2 className="font-display text-xl font-bold text-deep-blue">Upcoming lessons</h2>
+        {!profile ? (
+          <p className="mt-2 rounded-lg border border-dashed border-deep-blue/20 p-6 text-sm text-deep-blue/70">
+            Set up your profile to start booking lessons.
+          </p>
+        ) : (
+          <div className="mt-4">
+            <StudentLessons studentId={profile._id} studentName={profile.fullName} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function TutorDashboard() {
   const { data: students } = useMyStudents();
   const { data: lessons } = useMyCalendar();
@@ -165,5 +217,6 @@ export default function DashboardPage() {
   if (!user) return null;
   if (user.role === "tutor") return <TutorDashboard />;
   if (user.role === "admin") return <AdminDashboard />;
+  if (user.role === "student") return <StudentDashboard />;
   return <ParentDashboard />;
 }

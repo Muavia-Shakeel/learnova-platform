@@ -7,9 +7,17 @@ export const studentRouter = Router();
 
 studentRouter.use(requireAuth);
 
-studentRouter.post("/", requireRole("parent", "admin"), async (req, res, next) => {
+studentRouter.post("/", requireRole("parent", "admin", "student"), async (req, res, next) => {
   try {
     const input = StudentProfileSchema.parse(req.body);
+    if (req.user!.role === "student") {
+      input.parentId = req.user!.id;
+      const existing = await StudentProfile.findOne({ parentId: req.user!.id });
+      if (existing) {
+        res.status(409).json({ message: "Profile already exists" });
+        return;
+      }
+    }
     const student = await StudentProfile.create(input);
     res.status(201).json({ data: student });
   } catch (err) {
