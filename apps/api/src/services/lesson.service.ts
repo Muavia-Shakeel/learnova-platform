@@ -3,8 +3,50 @@ import type { CreateLessonInput, RescheduleLessonInput } from "@learnova/shared-
 import { Lesson } from "../models/lesson.model";
 import { TutorProfile } from "../models/tutorProfile.model";
 import { StudentProfile } from "../models/studentProfile.model";
+import { User } from "../models/user.model";
+import { Subject } from "../models/subject.model";
 import { ApiError } from "../middleware/errorHandler";
 import { deductCredits, refundCredits } from "./wallet.service";
+import * as emailService from "./email.service";
+
+function jitsiLink(lessonId: string) {
+  return `https://meet.jit.si/learnova-${lessonId}`;
+}
+
+interface NotifiableLesson {
+  studentId: unknown;
+  tutorId: unknown;
+  subjectId: unknown;
+  startUtc: Date;
+  durationHours: number;
+  zoomJoinUrl?: string | null;
+}
+
+async function notifyLessonParties(lesson: NotifiableLesson, kind: "scheduled" | "rescheduled" | "cancelled") {
+  const [student, tutor, subject] = await Promise.all([
+    StudentProfile.findById(lesson.studentId),
+    User.findById(lesson.tutorId),
+    Subject.findById(lesson.subjectId),
+  ]);
+  if (!student || !tutor || !subject) return;
+  const parent = await User.findById(student.parentId);
+
+  const recipients = [parent?.email, tutor.email].filter(Boolean) as string[];
+  if (recipients.length === 0) return;
+
+  const params = {
+    studentName: student.fullName,
+    tutorName: tutor.fullName,
+    subjectName: subject.name,
+    startUtc: lesson.startUtc,
+    durationHours: lesson.durationHours,
+    joinUrl: lesson.zoomJoinUrl ?? "",
+  };
+
+  if (kind === "scheduled") await emailService.sendLessonScheduledEmail(recipients, params);
+  else if (kind === "rescheduled") await emailService.sendLessonRescheduledEmail(recipients, params);
+  else await emailService.sendLessonCancelledEmail(recipients, params);
+}
 
 async function assertWithinAvailability(tutorId: string, startUtc: DateTime, durationHours: number) {
   const tutor = await TutorProfile.findOne({ userId: tutorId });
@@ -57,6 +99,10 @@ export async function bookLesson(input: CreateLessonInput) {
     await lesson.deleteOne();
     throw err;
   }
+
+  lesson.zoomJoinUrl = jitsiLink(lesson.id);
+  await lesson.save();
+  await notifyLessonParties(lesson, "scheduled");
   return lesson;
 }
 
@@ -74,6 +120,10 @@ export async function createAdHocLesson(input: CreateLessonInput) {
     status: "ad-hoc",
     createdByTutor: true,
   });
+
+  lesson.zoomJoinUrl = jitsiLink(lesson.id);
+  await lesson.save();
+  await notifyLessonParties(lesson, "scheduled");
   return lesson;
 }
 
@@ -88,6 +138,7 @@ export async function cancelLesson(lessonId: string) {
     const student = await StudentProfile.findById(lesson.studentId);
     if (student) await refundCredits(student.parentId.toString(), lesson.creditsDeducted, lesson.id);
   }
+  await notifyLessonParties(lesson, "cancelled");
   return lesson;
 }
 
@@ -101,6 +152,7 @@ export async function rescheduleLesson(input: RescheduleLessonInput) {
   lesson.startUtc = newStart.toJSDate();
   lesson.status = "rescheduled";
   await lesson.save();
+  await notifyLessonParties(lesson, "rescheduled");
   return lesson;
 }
 

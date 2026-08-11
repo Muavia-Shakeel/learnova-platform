@@ -174,6 +174,11 @@ export default function TutorCalendarPage() {
                 <p className="text-deep-blue/70">
                   {lesson.studentId?.fullName} · {formatLessonTime(lesson.startUtc)} · {lesson.durationHours}h
                 </p>
+                {lesson.zoomJoinUrl && (
+                  <a href={lesson.zoomJoinUrl} target="_blank" rel="noreferrer" className="text-sm font-semibold text-sage-green underline">
+                    Join video call
+                  </a>
+                )}
               </div>
               <button
                 onClick={() => markComplete.mutate(lesson._id)}

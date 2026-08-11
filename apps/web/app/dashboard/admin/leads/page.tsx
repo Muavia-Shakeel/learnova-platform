@@ -19,11 +19,24 @@ export default function AdminLeadsPage() {
   const { data: tutors } = useTutors();
   const updateLead = useUpdateLead();
   const [selection, setSelection] = useState<Record<string, string>>({});
+  const [schedule, setSchedule] = useState<Record<string, string>>({});
 
   async function assignTutor(leadId: string) {
     const assignedStaffId = selection[leadId];
     if (!assignedStaffId) return;
     await updateLead.mutateAsync({ leadId, assignedStaffId, status: "demo-booked" });
+  }
+
+  async function scheduleDemo(leadId: string, currentTutorId?: string) {
+    const localDateTime = schedule[leadId];
+    const assignedStaffId = selection[leadId] || currentTutorId;
+    if (!localDateTime || !assignedStaffId) return;
+    await updateLead.mutateAsync({
+      leadId,
+      assignedStaffId,
+      status: "demo-booked",
+      scheduledAt: new Date(localDateTime).toISOString(),
+    });
   }
 
   return (
@@ -64,9 +77,23 @@ export default function AdminLeadsPage() {
                   <span className="text-red-600">Unassigned</span>
                 )}
               </p>
+              {lead.scheduledAt && (
+                <p className="mt-1 text-sm">
+                  <span className="font-medium text-deep-blue">Demo scheduled: </span>
+                  <span className="text-sage-green">{new Date(lead.scheduledAt).toLocaleString()}</span>
+                  {lead.meetingUrl && (
+                    <>
+                      {" · "}
+                      <a href={lead.meetingUrl} target="_blank" rel="noreferrer" className="font-semibold underline">
+                        Join link
+                      </a>
+                    </>
+                  )}
+                </p>
+              )}
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <select
                 value={lead.status}
                 onChange={(e) => updateLead.mutate({ leadId: lead._id, status: e.target.value as LeadStatus })}
@@ -93,9 +120,22 @@ export default function AdminLeadsPage() {
               <button
                 onClick={() => assignTutor(lead._id)}
                 disabled={!selection[lead._id] || updateLead.isPending}
-                className="rounded-md bg-sage-green px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+                className="rounded-md border-2 border-deep-blue px-4 py-2 text-sm font-semibold text-deep-blue disabled:opacity-60"
               >
                 Assign
+              </button>
+              <input
+                type="datetime-local"
+                value={schedule[lead._id] ?? ""}
+                onChange={(e) => setSchedule((prev) => ({ ...prev, [lead._id]: e.target.value }))}
+                className="rounded-md border border-soft-blue px-3 py-2 text-sm"
+              />
+              <button
+                onClick={() => scheduleDemo(lead._id, lead.assignedStaffId?._id)}
+                disabled={!schedule[lead._id] || (!selection[lead._id] && !lead.assignedStaffId) || updateLead.isPending}
+                className="rounded-md bg-sage-green px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+              >
+                Schedule demo
               </button>
             </div>
           </div>

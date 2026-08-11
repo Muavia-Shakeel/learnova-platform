@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { resend, EMAIL_FROM } from "../lib/resend";
 import { logger } from "../config/logger";
 import { env } from "../config/env";
@@ -9,6 +10,10 @@ async function send(to: string | string[], subject: string, html: string) {
   } catch (err) {
     logger.error({ err, to, subject }, "Failed to send email");
   }
+}
+
+function formatUtc(date: Date) {
+  return DateTime.fromJSDate(date).toUTC().toFormat("ccc, dd LLL yyyy 'at' HH:mm 'UTC'");
 }
 
 export async function sendApplicationReceivedEmail(to: string, fullName: string) {
@@ -55,6 +60,62 @@ export async function sendApplicationRejectedEmail(to: string, fullName: string,
     `<p>Hi ${fullName},</p>
      <p>Thanks for applying to teach on Learnova. We're not able to move forward with your application at this time.</p>
      ${reason ? `<p>${reason}</p>` : ""}
+     <p>— Learnova</p>`,
+  );
+}
+
+interface LessonEmailParams {
+  studentName: string;
+  tutorName: string;
+  subjectName: string;
+  startUtc: Date;
+  durationHours: number;
+  joinUrl: string;
+}
+
+export async function sendLessonScheduledEmail(to: string | string[], p: LessonEmailParams) {
+  await send(
+    to,
+    `Lesson scheduled — ${p.subjectName} on ${formatUtc(p.startUtc)}`,
+    `<p>A lesson has been scheduled:</p>
+     <p><strong>${p.studentName}</strong> with <strong>${p.tutorName}</strong> — ${p.subjectName}<br />
+     ${formatUtc(p.startUtc)} · ${p.durationHours}h</p>
+     <p><a href="${p.joinUrl}">Join the video call</a></p>
+     <p>— Learnova</p>`,
+  );
+}
+
+export async function sendLessonRescheduledEmail(to: string | string[], p: LessonEmailParams) {
+  await send(
+    to,
+    `Lesson rescheduled — ${p.subjectName}`,
+    `<p>This lesson was moved to a new time:</p>
+     <p><strong>${p.studentName}</strong> with <strong>${p.tutorName}</strong> — ${p.subjectName}<br />
+     New time: ${formatUtc(p.startUtc)} · ${p.durationHours}h</p>
+     <p><a href="${p.joinUrl}">Join the video call</a></p>
+     <p>— Learnova</p>`,
+  );
+}
+
+export async function sendLessonCancelledEmail(to: string | string[], p: Omit<LessonEmailParams, "joinUrl">) {
+  await send(
+    to,
+    `Lesson cancelled — ${p.subjectName}`,
+    `<p>This lesson has been cancelled:</p>
+     <p><strong>${p.studentName}</strong> with <strong>${p.tutorName}</strong> — ${p.subjectName}<br />
+     Was scheduled: ${formatUtc(p.startUtc)}</p>
+     <p>— Learnova</p>`,
+  );
+}
+
+export async function sendDemoScheduledEmail(to: string | string[], p: { leadName: string; tutorName: string; startUtc: Date; joinUrl: string }) {
+  await send(
+    to,
+    `Your free demo lesson is scheduled — ${formatUtc(p.startUtc)}`,
+    `<p>Hi ${p.leadName},</p>
+     <p>Your free demo lesson with <strong>${p.tutorName}</strong> is scheduled for:</p>
+     <p>${formatUtc(p.startUtc)}</p>
+     <p><a href="${p.joinUrl}">Join the video call</a></p>
      <p>— Learnova</p>`,
   );
 }

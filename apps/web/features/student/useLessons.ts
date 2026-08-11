@@ -12,6 +12,7 @@ export interface Lesson {
   startUtc: string;
   durationHours: number;
   status: "booked" | "completed" | "cancelled" | "rescheduled" | "ad-hoc" | "free-trial";
+  zoomJoinUrl?: string;
 }
 
 export function useLessons(studentId?: string) {

@@ -11,6 +11,7 @@ export interface TutorLesson {
   startUtc: string;
   durationHours: number;
   status: "booked" | "completed" | "cancelled" | "rescheduled" | "ad-hoc" | "free-trial";
+  zoomJoinUrl?: string;
 }
 
 export function useMyCalendar() {

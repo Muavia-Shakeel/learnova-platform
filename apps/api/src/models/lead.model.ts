@@ -15,6 +15,8 @@ const leadSchema = new Schema(
       default: "new",
     },
     assignedStaffId: { type: Schema.Types.ObjectId, ref: "User" },
+    scheduledAt: { type: Date },
+    meetingUrl: { type: String },
   },
   { timestamps: true },
 );

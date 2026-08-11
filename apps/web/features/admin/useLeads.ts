@@ -17,6 +17,8 @@ export interface Lead {
   notes?: string;
   status: LeadStatus;
   assignedStaffId?: { _id: string; fullName: string; email: string };
+  scheduledAt?: string;
+  meetingUrl?: string;
   createdAt: string;
 }
 
@@ -34,11 +36,21 @@ export function useUpdateLead() {
   const { accessToken } = useAuth();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ leadId, status, assignedStaffId }: { leadId: string; status?: LeadStatus; assignedStaffId?: string }) =>
+    mutationFn: ({
+      leadId,
+      status,
+      assignedStaffId,
+      scheduledAt,
+    }: {
+      leadId: string;
+      status?: LeadStatus;
+      assignedStaffId?: string;
+      scheduledAt?: string;
+    }) =>
       apiFetch<Lead>(`/api/crm/leads/${leadId}`, {
         method: "PATCH",
         token: accessToken!,
-        body: JSON.stringify({ status, assignedStaffId }),
+        body: JSON.stringify({ status, assignedStaffId, scheduledAt }),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "leads"] });

@@ -38,6 +38,11 @@ function StudentLessons({ studentId, studentName }: { studentId: string; student
             <p className="text-deep-blue/70">
               with {lesson.tutorId?.fullName} · {formatLessonTime(lesson.startUtc)}
             </p>
+            {lesson.zoomJoinUrl && (
+              <a href={lesson.zoomJoinUrl} target="_blank" rel="noreferrer" className="mt-1 inline-block text-sm font-semibold text-sage-green underline">
+                Join video call
+              </a>
+            )}
           </div>
         ))}
       </div>
