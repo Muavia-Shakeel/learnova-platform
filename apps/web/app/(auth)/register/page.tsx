@@ -11,15 +11,20 @@ export default function RegisterPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"parent" | "student" | "">("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (!role) {
+      setError("Please select whether you're a parent or a student.");
+      return;
+    }
     setSubmitting(true);
     try {
-      await register({ fullName, email, password, role: "parent" });
+      await register({ fullName, email, password, role });
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof ApiClientError ? err.message : "Registration failed");
@@ -57,6 +62,35 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
           className="rounded-md border border-soft-blue px-4 py-2"
         />
+
+        <div>
+          <p className="mb-2 text-sm font-medium text-deep-blue">I am a...</p>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setRole("student")}
+              className={`flex-1 rounded-md border px-4 py-2.5 text-sm font-medium ${
+                role === "student"
+                  ? "border-sage-green bg-sage-green text-white"
+                  : "border-soft-blue text-deep-blue"
+              }`}
+            >
+              Student (I'm booking for myself)
+            </button>
+            <button
+              type="button"
+              onClick={() => setRole("parent")}
+              className={`flex-1 rounded-md border px-4 py-2.5 text-sm font-medium ${
+                role === "parent"
+                  ? "border-sage-green bg-sage-green text-white"
+                  : "border-soft-blue text-deep-blue"
+              }`}
+            >
+              Parent (I'm booking for my child)
+            </button>
+          </div>
+        </div>
+
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
