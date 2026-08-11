@@ -40,7 +40,7 @@ function formatLessonTime(startUtc: string) {
 }
 
 export default function TutorCalendarPage() {
-  const { data: profile } = useMyTutorProfile();
+  const { data: profile, isLoading: profileLoading } = useMyTutorProfile();
   const updateAvailability = useUpdateAvailability();
   const { data: lessons, isLoading: lessonsLoading } = useMyCalendar();
   const markComplete = useMarkLessonComplete();
@@ -74,8 +74,15 @@ export default function TutorCalendarPage() {
   async function saveAvailability() {
     setSaved(false);
     setError(null);
+    if (profileLoading) {
+      setError("Still loading your current availability — wait a moment and try again.");
+      return;
+    }
     if (!TIMEZONES.includes(timezone)) {
       setError("Not a valid timezone — pick one from the list, e.g. Asia/Karachi.");
+      return;
+    }
+    if (slots.length === 0 && !window.confirm("You have zero time slots — this blocks students from booking any lesson with you. Save anyway?")) {
       return;
     }
     try {
@@ -173,10 +180,10 @@ export default function TutorCalendarPage() {
         <button
           type="button"
           onClick={saveAvailability}
-          disabled={updateAvailability.isPending}
+          disabled={updateAvailability.isPending || profileLoading}
           className="mt-4 rounded-md bg-sage-green px-6 py-3 text-sm font-medium text-white disabled:opacity-60"
         >
-          {updateAvailability.isPending ? "Saving..." : "Save availability"}
+          {updateAvailability.isPending ? "Saving..." : profileLoading ? "Loading..." : "Save availability"}
         </button>
         {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
         {saved && <p className="mt-2 text-sm text-sage-green">Availability saved.</p>}
