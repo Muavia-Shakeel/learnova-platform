@@ -30,6 +30,7 @@ const ADMIN_LINKS = [
   { href: "/dashboard/admin/students", label: "Students" },
   { href: "/dashboard/admin/leads", label: "Leads & Demos" },
   { href: "/dashboard/admin/subjects", label: "Subjects" },
+  { href: "/dashboard/admin/home-content", label: "Home Page" },
   { href: "/dashboard/admin/resources", label: "Resources" },
   { href: "/dashboard/admin", label: "Payments" },
   { href: "/dashboard/admin/careers", label: "Applications" },

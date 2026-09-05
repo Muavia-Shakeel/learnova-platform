@@ -20,6 +20,7 @@ import { tutorRouter } from "./routes/tutor.routes";
 import { studentRouter } from "./routes/student.routes";
 import { subjectRouter } from "./routes/subject.routes";
 import { careersRouter } from "./routes/careers.routes";
+import { homeContentRouter } from "./routes/homeContent.routes";
 
 export const app = express();
 
@@ -56,5 +57,6 @@ app.use("/api/tutors", tutorRouter);
 app.use("/api/students", studentRouter);
 app.use("/api/subjects", subjectRouter);
 app.use("/api/careers", careersRouter);
+app.use("/api/home-content", homeContentRouter);
 
 app.use(errorHandler);

@@ -7,3 +7,4 @@ export * from "./lesson.schema";
 export * from "./wallet.schema";
 export * from "./academic.schema";
 export * from "./careers.schema";
+export * from "./homeContent.schema";
